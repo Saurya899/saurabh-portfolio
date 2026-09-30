@@ -1,6 +1,24 @@
+# =========================
+# Stage 1: Build frontend
+# =========================
+FROM node:20-alpine AS frontend
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+RUN npm run build
+
+
+# =========================
+# Stage 2: Laravel + Apache
+# =========================
 FROM php:8.3-apache
 
-# Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -13,7 +31,7 @@ RUN apt-get update && apt-get install -y \
     libicu-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Install PHP extensions
+# PHP extensions
 RUN docker-php-ext-configure gd \
     --with-jpeg \
     --with-freetype \
@@ -28,25 +46,27 @@ RUN docker-php-ext-configure gd \
     intl \
     opcache
 
-# Enable Apache modules
+# Apache
 RUN a2enmod rewrite headers
 
-# Install Composer
+# Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Set project directory
 WORKDIR /var/www/html
 
-# Copy project
+# Laravel project
 COPY . .
 
-# Install production dependencies
+# Composer dependencies
 RUN composer install \
     --no-dev \
     --optimize-autoloader \
     --no-interaction
 
-# Apache configuration
+# Copy Vite production build
+COPY --from=frontend /app/public/build ./public/build
+
+# Laravel public directory
 RUN sed -i \
     's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|' \
     /etc/apache2/sites-available/000-default.conf
@@ -58,13 +78,13 @@ RUN printf '<Directory /var/www/html/public>\n\
     > /etc/apache2/conf-available/laravel.conf \
     && a2enconf laravel
 
-# Configure Render port
+# Render port
 RUN sed -i 's/Listen 80/Listen 10000/' /etc/apache2/ports.conf
 
 RUN sed -i 's/:80>/:10000>/' \
     /etc/apache2/sites-available/000-default.conf
 
-# Permissions
+# Laravel permissions
 RUN chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
