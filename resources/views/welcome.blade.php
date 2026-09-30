@@ -60,7 +60,7 @@
 
                 <!-- Action Button -->
                 <div class="hidden sm:flex items-center">
-                    <a href="#contact"
+                    <a href="{{ asset('resume.pdf') }}" download="Saurabh_Kumar_Resume.pdf" target="_blank"
                         class="inline-flex items-center gap-2 bg-[#2563eb] hover:bg-blue-700 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-md shadow-blue-500/20 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
                         <i class="fa-solid fa-download text-xs"></i>
                         Download Resume
@@ -87,7 +87,7 @@
             <a href="#contact"
                 class="mobile-nav-link block px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50">Contact</a>
             <div class="pt-2">
-                <a href="#contact"
+                <a href="{{ asset('resume.pdf') }}" download="Saurabh_Kumar_Resume.pdf" target="_blank"
                     class="w-full inline-flex justify-center items-center gap-2 bg-blue-600 text-white text-sm font-bold py-3 rounded-xl shadow-md">
                     <i class="fa-solid fa-download"></i> Download Resume
                 </a>
@@ -180,7 +180,7 @@
                                 View My Projects
                                 <i class="fa-solid fa-arrow-right text-[10px]"></i>
                             </a>
-                            <a href="#contact"
+                            <a href="{{ asset('resume.pdf') }}" download="Saurabh_Kumar_Resume.pdf" target="_blank"
                                 class="inline-flex items-center justify-center gap-1.5 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs px-3.5 py-2.5 rounded-xl border border-slate-200/90 shadow-2xs transition-all hover:border-slate-300 whitespace-nowrap">
                                 <i class="fa-solid fa-download text-slate-400"></i>
                                 Download Resume
